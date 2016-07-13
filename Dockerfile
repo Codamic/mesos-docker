@@ -8,5 +8,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF && \
     apt-get -y install mesos && \
     apt-get -y clean
 
+COPY ./mesos-run.sh /usr/local/bin/
+CMD mesos-run.sh
 WORKDIR /
 EXPOSE 5050
