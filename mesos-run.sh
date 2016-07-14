@@ -2,7 +2,7 @@
 
 if [[ $MESOS_SLAVE && ${MESOS_SLAVE} ]]
 then
-    mesos-slave --master=$MASTER --work_dir=/var/lib/mesos
+    mesos-slave  --no-systemd_enable_support --work_dir=/var/lib/mesos --log_dir=/var/log/mesos $ARGS
 else
-    mesos-master --zk=$ZOOKEEPERS --work_dir=/var/lib/mesos --quorum=$QUOARM --ip=127.0.0.1
+    mesos-master --work_dir=/var/lib/mesos --ip=0.0.0.0 --log_dir=/var/log/mesos $ARGS
 fi
