@@ -1,5 +1,4 @@
 #! /bin/sh
 
-export GOOS=linux
-export GOARCH=amd64
-go build -a -v -ldflags "-w -s" sh.fake.go
+cp `which qemu-aarch64-static` ./
+docker build . -t codamic/mesos-aarch64:"$@"
