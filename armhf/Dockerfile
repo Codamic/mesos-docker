@@ -1,19 +1,15 @@
-FROM arm32v7/debian:stable-slim
+# Reqs:
+# apt install qemu qemu-user-static binfmt-support
+# # update-binfmts --display | grep -i aarch
+# qemu-aarch64 (enabled):
+# interpreter = /usr/bin/qemu-aarch64-static
+FROM arm64v8/debian:stable-slim
 
 # QEMU ARM emulator
-COPY bin/qas /usr/bin/qas
+COPY /usr/bin/qemu-aarch64-static /usr/bin/qemu-aarch64-static
 
-RUN ["/usr/bin/qas", "/bin/cp", "/bin/sh", "/bin/sh.real"]
-
-# Checkout sh.fake.go file for details
-COPY sh.fake /bin/sh.fake
-
-# Restor the real shell and run everything using QEMU
-RUN ["/bin/sh.fake"]
-
-RUN apt-get update
-RUN apt-get install -y openjdk-8-jdk \
-                       tar wget git \
+RUN /usr/bin/apt update
+RUN /usr/bin/apt install -y tar wget git \
                        build-essential \
                        python-dev \
                        python-six \
@@ -26,5 +22,4 @@ RUN apt-get install -y openjdk-8-jdk \
                        libsvn-dev \
                        zlib1g-dev
 
-# Restore fake shell
-RUN ["/bin/sh.fake"]
+#RUN /usr/bin/apt install -y openjdk-8-jdk
