@@ -1,4 +1,4 @@
 #! /bin/sh
 
 cp `which qemu-aarch64-static` ./
-docker build . -t codamic/mesos-aarch64:"$@"
+docker build . -t codamic/mesos-aarch64:"$@" -f Dockerfile

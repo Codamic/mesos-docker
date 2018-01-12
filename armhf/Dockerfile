@@ -46,26 +46,15 @@ RUN apk add apr \
     zlib-dev
 
 RUN pip install six virtualenv
+RUN git clone https://git-wip-us.apache.org/repos/asf/mesos.git /usr/src/mesos
+WORKDIR /usr/src/mesos
+RUN git checkout 1.4.1
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk
 
-ENV VERSION="1.4.1" \
-    BASE_URL="http://www-eu.apache.org/dist/mesos" \
-    CONFIG_FLAGS="" \
-    MAKE_FLAGS="-j 3"
+RUN ./bootstrap
+RUN ./configure
+RUN make || true
+RUN for i in `find . -iname "config.guess"`; do cp /usr/share/automake-1.15/config.guess $i -v; done
 
-ENV PACKAGE="mesos-$VERSION".tar.gz
-ENV PACKAGE_URL="$BASE_URL/$VERSION/$PACKAGE"
-ENV KEYS_URL="$BASE_URL"/KEYS
-
-RUN ln -sv /usr/include/locale.h /usr/include/xlocale.h
-RUN mkdir -p /tmp/mesos
-WORKDIR /tmp/mesos
-# RUN curl -L "$KEYS_URL" -o KEYS
-# RUN gpg --import KEYS
-#RUN curl -L "$PACKAGE_URL".asc -o "$PACKAGE".asc
-RUN echo "$PACKAGE_URL"
-RUN curl -L "$PACKAGE_URL" -o "$PACKAGE"
-#RUN gpg --verify "$PACKAGE".asc "$PACKAGE"
-RUN tar xf "$PACKAGE"
-WORKDIR /tmp/mesos/mesos-"$VERSION"
-RUN ./configure $CONFIG_FLAGS
-RUN make $MAKE_FLAGS
+RUN make -j 3
+RUN make install

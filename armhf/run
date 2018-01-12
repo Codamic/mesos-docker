@@ -1,0 +1,3 @@
+#! /bin/bash
+
+docker run --rm -it codamic/mesos-aarch64:"$@" /usr/bin/qemu-aarch64-static /bin/bash
